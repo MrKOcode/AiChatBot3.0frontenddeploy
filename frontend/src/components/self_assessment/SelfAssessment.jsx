@@ -53,7 +53,7 @@ function SelfAssessment() {
           </div>
         ))}
         <button type="submit" className={styles.submitButton}>
-          Submit
+          提交
         </button>
       </form>
     </div>

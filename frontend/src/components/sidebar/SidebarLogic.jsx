@@ -30,29 +30,6 @@ export default function SidebarLogic({ children }) {
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">{children}</ul>
         </SidebarContext.Provider>
-
-        {/* user section */}
-        <div className="border-t flex p-3">
-          <img
-            src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true&name=Landon+Thompson"
-            alt="profile-initials"
-            className="w-10 h-10 rounded-md"
-          />
-          {/* user info section */}
-          <div
-            className={`flex justify-between items-center 
-                        overflow-hidden transition-all ${
-                          expanded ? "w-52 ml-3" : "w-0"
-                        }`}
-          >
-            <div className="leading-4">
-              <h4 className="font-semibold">LandonThompson</h4>
-              <span className="text-xs text-gray-600">lanthomp@gmail.com</span>
-            </div>
-            {/* logout button? */}
-            <MoreVertical size={20} />
-          </div>
-        </div>
       </nav>
     </aside>
   );

@@ -16,6 +16,9 @@ import { createConversation } from "@/redux/api/chat-state-api";
 
 
 
+
+
+
 function Dashboard({ userInfo, onLogout }) {
   const [activeComponent, setActiveComponent] = useState("Assessment"); // Default to Assessment view
   const [selectedConId, setSelectedConId] = useState(null);
@@ -98,7 +101,7 @@ function Dashboard({ userInfo, onLogout }) {
 
   return (
     <div className={styles.dashContainer}>
-      <Sidebar >
+      <Sidebar>
         {/* User info section */}
         <div className={styles.userSection}>
           <div className={styles.userInfo}>
@@ -124,15 +127,8 @@ function Dashboard({ userInfo, onLogout }) {
         {mapConversations}
 
         <SidebarItem
-          icon={<History size={20} />}
-          text="Chat History"
-          active={activeComponent === "ChatHistory"}
-          onClick={() => setActiveComponent("ChatHistory")}
-        />
-
-        <SidebarItem
           icon={<NotebookPen size={20} />}
-          text="Self Assessment"
+          text="Assessment"
           active={activeComponent === "Assessment"}
           alert
           onClick={() => setActiveComponent("Assessment")}
@@ -148,7 +144,7 @@ function Dashboard({ userInfo, onLogout }) {
           />
         </div>
       </Sidebar>
-      {activeComponent === "Chat" ? <ChatComponent /> : activeComponent === "ChatHistory" ? <ChatHistory /> : <SelfAssessment />}
+      {activeComponent === "Chat" ? <ChatComponent /> : <SelfAssessment />}
     </div>
   );
 }

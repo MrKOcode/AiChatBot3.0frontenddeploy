@@ -269,7 +269,7 @@ export const sendMessage = (conversationId: string, content: string) => {
       console.log("sendMessage - Created backend message:", message);
 
       const requestBody = {
-        userId: "1",
+        userId: localStorage.getItem("userId"),
         conversationId,
         message, // Use the correct field name expected by the API
       };

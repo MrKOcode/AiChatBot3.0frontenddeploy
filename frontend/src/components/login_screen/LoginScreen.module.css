@@ -144,3 +144,100 @@
     padding-bottom: 20px;
     margin-top: -20px;
 }
+
+/* Toggle between login and register styles */
+.toggleContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.toggleText {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.toggleButton {
+    background: none;
+    border: none;
+    color: var(--welcome-panel-bg);
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.toggleButton:hover {
+    color: var(--button-bg-hover);
+}
+
+/* Login button container styles */
+.loginButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.loginButton {
+    background-color: var(--button-bg);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: var(--button-font-size);
+    font-weight: var(--button-font-weight);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    height: 45px;
+}
+
+.loginButton:hover {
+    background-color: var(--button-bg-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.loginButton:active,
+.loginButton.clicked {
+    background-color: var(--button-bg-click);
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.loginButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.loginButton.loading {
+    background-color: var(--button-bg-hover);
+}
+
+/* Loading spinner styles */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--welcome-panel-bg);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.rightArrow {
+    font-size: 18px;
+}

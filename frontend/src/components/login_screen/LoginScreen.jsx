@@ -2,17 +2,39 @@ import styles from "./LoginScreen.module.css";
 import logo from "../assets/website-icon.png";
 import { useState } from "react";
 import LoginController from "./LoginController";
+import RegisterController from "./RegisterController";
 import React from "react";
 
 function LoginScreen({ onLoginSuccess }) {
   // States for input handling
-  const [studentID, setStudentID] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loginError, setLoginError] = useState(null);
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
 
   // error handler
   const handleLoginError = (errorMessage) => {
     setLoginError(errorMessage);
+  };
+
+  // success handler
+  const handleAuthSuccess = (userData) => {
+    // 存储用户信息到本地存储
+    localStorage.setItem('userId', userData.userId);
+    localStorage.setItem('username', userData.username);
+    localStorage.setItem('userRole', userData.role || 'user');
+    
+    onLoginSuccess();
+  };
+
+  // 切换模式
+  const toggleMode = () => {
+    setIsRegisterMode(!isRegisterMode);
+    setLoginError(null);
+    setUsername("");
+    setPassword("");
+    setConfirmPassword("");
   };
 
   return (
@@ -20,49 +42,91 @@ function LoginScreen({ onLoginSuccess }) {
       <div className={styles.loginContainer}>
         {/* This div is for the login inputs */}
         <div className={styles.inputContainer}>
-          <h1 className={styles.inputLabel}>LOGIN</h1>
+          <h1 className={styles.inputLabel}>
+            {isRegisterMode ? "Register" : "Login"}
+          </h1>
 
           {/* Creating the input field for username */}
-          {/* <label className={styles.inputLabel}>StudentID</label> */}
           <div className={styles.inputGroup}>
             <input
               className={styles.inputField}
               type="text"
-              placeholder="StudentID"
-              value={studentID}
-              onChange={(e) => setStudentID(e.target.value)}
+              placeholder="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
           {/* Creating the input field for the password */}
-          {/* <label className={styles.inputLabel}>Password</label> */}
           <div className={styles.inputGroup}>
             <input
               className={styles.inputField}
               type="password"
-              placeholder="Password"
+              placeholder="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {/* Display incorrect password error */}
+
+          {/* Confirm password field for registration */}
+          {isRegisterMode && (
+            <div className={styles.inputGroup}>
+              <input
+                className={styles.inputField}
+                type="password"
+                placeholder="confirm password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+          )}
+
+          {/* Display error message */}
           <div className={styles.failedLogin}>
             {loginError && <p className={styles.errorMessage}>{loginError}</p>}
           </div>
 
-          <LoginController
-            studentID={studentID}
-            password={password}
-            onLoginSuccess={onLoginSuccess}
-            onLoginError={handleLoginError}
-          />
+          {/* Render appropriate controller based on mode */}
+          {isRegisterMode ? (
+            <RegisterController
+              username={username}
+              password={password}
+              confirmPassword={confirmPassword}
+              onRegisterSuccess={handleAuthSuccess}
+              onRegisterError={handleLoginError}
+            />
+          ) : (
+            <LoginController
+              username={username}
+              password={password}
+              onLoginSuccess={handleAuthSuccess}
+              onLoginError={handleLoginError}
+            />
+          )}
+
+          {/* Toggle between login and register */}
+          <div className={styles.toggleContainer}>
+            <p className={styles.toggleText}>
+              {isRegisterMode 
+                ? "Already have an account?" 
+                : "Don't have an account?"}
+              <button 
+                className={styles.toggleButton}
+                onClick={toggleMode}
+              >
+                {isRegisterMode ? "Login" : "Register"}
+              </button>
+            </p>
+          </div>
         </div>
 
         <div className={styles.welcomePanel}>
           <img src={logo} />
-          <h1 className={styles.welcomeHeader}> Welcome!</h1>
+          <h1 className={styles.welcomeHeader}>Welcome欢迎！</h1>
           <p className={styles.subtext}>
-            Please enter your Student ID and password!
+            {isRegisterMode 
+              ? "Create an account to get started!"
+              : "Please enter your credentials to log in."}
           </p>
         </div>
       </div>

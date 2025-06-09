@@ -9,6 +9,50 @@
     display: flex;
 }
 
+
 /* .sidebarFormat{
     display: none;
 } */
+
+/* User info section styles */
+.userSection {
+    padding: 16px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 8px;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.username {
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+}
+
+.userRole {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: capitalize;
+    margin-left: 24px;
+}
+
+/* Logout section styles */
+.logoutSection {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.logoutButton {
+    color: #ef4444 !important;
+}
+
+.logoutButton:hover {
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
+}

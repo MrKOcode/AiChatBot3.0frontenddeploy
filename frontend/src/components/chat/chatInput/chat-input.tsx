@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { AutosizeTextarea } from "@/components/chat/ui/autosize-textarea";
 import { Button } from "@/components/chat/ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,17 +11,25 @@ export default function ChatInput() {
     (state: RootState) => state.chat.currentConId,
   );
   const inputRef = useRef<AutosizeTextAreaRef>(null);
+  const [inputValue, setInputValue] = useState("");
   const dispatch = useDispatch<AppDispatch>();
+  
+  const resetInput = (): void => {
+    setInputValue("");
+    if (inputRef.current) {
+      inputRef.current.textArea.value = "";
+    }
+  };
+  
   const submitMessage = (): void => {
     const messageText = inputRef.current?.textArea.value;
     if (messageText && messageText !== "") {
       console.log("Dispatching sendMessage thunk");
       dispatch(sendMessage(currentConversationId, messageText));
-      if (inputRef.current) {
-        inputRef.current.textArea.value = "";
-      }
+      resetInput();
     }
   };
+  
   const handleKeyPress = (
     event: React.KeyboardEvent<HTMLTextAreaElement>,
   ): void => {
@@ -31,6 +39,10 @@ export default function ChatInput() {
     }
   };
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
+    setInputValue(event.target.value);
+  };
+
   return (
     <div className="absolute w-full bottom-0 flex justify-end items-end select-none pointer-events-none">
       <div className="h-28 w-full items-center justify-center flex flex-col z-10">
@@ -38,11 +50,13 @@ export default function ChatInput() {
           <div className="flex-row flex space-x-4 items-end w-full pointer-events-auto">
             <AutosizeTextarea
               className="h-96 w-full"
-              placeholder="Type a message..."
+              placeholder="Please type here..."
               ref={inputRef}
+              value={inputValue}
+              onChange={handleInputChange}
               onKeyDown={handleKeyPress}
             />
-            <Button onClick={submitMessage}>Submit</Button>
+            <Button onClick={submitMessage}>Send</Button>
           </div>
         </div>
       </div>

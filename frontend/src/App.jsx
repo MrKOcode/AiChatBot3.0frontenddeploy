@@ -3,21 +3,61 @@ import React from "react";
 import LoginScreen from "./components/login_screen/LoginScreen";
 import Dashboard from "./components/dashboard/Dashboard";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
+import { checkAuthStatus } from "./services/authService";
 
 function App() {
   // user login state tracker
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check authentication status on app load
+  useEffect(() => {
+    const authStatus = checkAuthStatus();
+    if (authStatus.isAuthenticated) {
+      setIsLoggedIn(true);
+      setUserInfo(authStatus.user);
+    }
+    setIsLoading(false);
+  }, []);
+
   // login handler
   const handleLoginSuccess = () => {
+    const authStatus = checkAuthStatus();
     setIsLoggedIn(true);
+    setUserInfo(authStatus.user);
   };
+
+  // logout handler
+  const handleLogout = () => {
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userRole');
+    setIsLoggedIn(false);
+    setUserInfo(null);
+  };
+
+  // Show loading screen while checking auth status
+  if (isLoading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '18px'
+      }}>
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <Router>
@@ -34,7 +74,13 @@ function App() {
         />
         <Route
           path="/dashboard"
-          element={isLoggedIn ? <Dashboard /> : <Navigate to="/" replace />}
+          element={
+            isLoggedIn ? (
+              <Dashboard userInfo={userInfo} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
         />
       </Routes>
     </Router>
