@@ -1,0 +1,146 @@
+:root{
+    --button-bg: rgb(157, 241, 173, 1);
+    --button-bg-hover: rgba(110, 247, 134, 1);
+    --button-bg-click: rgba(58, 237, 91, 1);
+
+    --login-container-bg: rgb(255, 253, 253, 1);
+    --login-container-compl-color: rgb(231, 219, 191);
+
+
+    --button-font-weight: normal;
+    --button-font-size: 16px;
+
+    --welcome-panel-bg: rgb(120, 24, 137);
+
+    --input-field-bg: rgba(237, 230, 230, 0.879);
+
+    background-color: rgb(226, 237, 226);
+}
+
+/* hiding scroll bar */
+/* html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+    height: 100%;
+} */
+
+.panelHandler{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 95vh;
+}
+
+.loginContainer{
+
+    /* Setting all content to the middle and making it scale to the */
+    /* user view height */
+    display: flex;
+    justify-content: center;
+    flex-direction: horizontal;
+    align-items: center;
+    
+    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    border-radius: 10px;
+}
+
+.welcomePanel{
+    background-color: var(--welcome-panel-bg);
+    width: 200px;
+    height: 400px;
+
+    border-radius: 0 10px 10px 0;
+
+    /* box-shadow: 10px 0px 8px -2px rgba(0, 0, 0, .5); */
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    left: 0px;
+}
+.welcomeHeader{
+    color: white;
+}
+.subtext {
+    font-size: 14px; 
+    color: white; 
+    margin: 0px 5px 0 5px;
+    text-align: center; 
+
+    font-style: italic;
+}
+
+
+.inputContainer{
+    display: inherit;
+    /* make sure inputs are set vertically */
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    background-color: var(--login-container-bg);
+
+    height: 400px;
+    width: 300px;
+
+    /* rounding border */
+    border-radius: 10px 0 0 10px;
+
+    /* pad the input fields */
+    gap: 8px;
+
+    /* shadow to give depth */
+    z-index: 1;
+
+    /* box-shadow: 10px 0px 8px rgba(0, 0, 0, .5); */
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    /* Align text to the left */
+    align-items: center; 
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.inputLabel {
+    padding-left: 36%;
+    font-weight: bolder;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.inputField{
+    border: none;
+    outline: none;
+    border-radius: 6px;
+
+    /* make height + width scale to vw + vw */
+    width: 80%;
+    height: 40px;
+
+    font-size: 125%;
+    background-color: var(--input-field-bg);
+
+    /* fields animations */
+    transition: all 0.1s ease-in-out;
+
+    padding-left: 10px;
+}
+.inputField:hover,:focus{
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, .5);
+    outline: 2px solid var(--welcome-panel-bg);
+}
+
+.failedLogin{
+    font-style: italic;
+    color: red;
+    padding-left: 10%;
+    padding-bottom: 20px;
+    margin-top: -20px;
+}

@@ -1,0 +1,109 @@
+:root{
+    --shadow: rgba(0,0,0,.5);
+    --field-bg: rgba(231, 231, 231, 0.547);
+    --input-bg: #fffffffe;
+
+    background-color: #000c4a;
+    
+    background-image: url("d.jpg");
+    background-size: 50%;
+    animation: bg-anime 90s cubic-bezier(0.3,0,0.7,1) infinite;
+}
+@keyframes bg-anime {
+    0% {background-position: 0% 0%;}
+    50% {background-position: 50% 50%;}
+    100% {background-position: 100% 100%;}
+
+}
+
+/* html, body{
+    margin: 0%;
+    padding: 0;
+    overflow: hidden;
+    height: 100%; 
+} */
+.submitButton {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #4caf50; /* Change this color as needed */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.submitButton:hover {
+    background-color: #45a049; /* Darker shade for hover effect */
+}
+.banner{
+    color: rgb(70, 70, 70);
+    height: 0%;
+    width: 100%;
+    font-weight: normal;
+}
+.assHandler{
+    height: 100%;
+    width: 100%;
+
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    
+}
+.inputLabel{
+    color: rgb(110, 82, 61);
+    font-size: 25px;
+    font-weight: normal;
+
+    margin-bottom: 5px;
+    padding-left: 10%;
+}
+.inputGroup{
+    
+   
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    
+    width: 800px;
+    min-height: 150px;
+    height:auto;
+
+    margin-top: 50px;
+
+    padding-bottom: 10px;
+    padding-top: 10px;
+    
+    background-color: var(--input-bg);
+
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px var(--shadow);
+     
+}
+.inputField{
+    margin-left: 10%;
+    margin-right: 10%;
+    
+    border: none;
+    outline: none;
+    border-radius: 6px;
+
+    min-height: 25px;
+    width: 80%;
+    resize: none;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    text-indent: 15px;
+
+    background-color: var(--field-bg);
+
+
+}

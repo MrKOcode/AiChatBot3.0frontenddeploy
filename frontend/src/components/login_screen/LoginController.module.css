@@ -1,0 +1,45 @@
+.loginButton{
+    border: 2px solid black;
+    border-radius: 6px;
+
+    background-color: var(--button-bg);
+    
+    /* fixes arrow being stuck to the left */
+    justify-items: center;
+    
+    /* button size */
+    width: 40%;
+    height: 10%;
+
+    /* button border removal */
+    outline: none;
+    border: none;
+    /* margin-top: 10px; */
+    margin-left: 30%;
+    transition: all 0.15s;
+}
+/* button clicked animation */
+.clicked{
+    animation: buttonClick 0.15s ease-in-out;
+}
+@keyframes buttonClick {
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(0.98);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+.loginButton:hover{
+    background-color: var(--button-bg-hover);
+    box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+    outline: 2px solid rgb(120, 24, 137);
+}
+
+.rightArrow{
+    vertical-align: bottom;
+    transform: scale(1.5);
+}
