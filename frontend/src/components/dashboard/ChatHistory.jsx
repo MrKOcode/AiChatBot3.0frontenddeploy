@@ -148,7 +148,7 @@ const ChatHistory = () => {
             </span>
             {message.conversationId && (
               <span className={styles.conversationId}>
-                会话: {message.conversationId}
+                ConvId: {message.conversationId}
               </span>
             )}
           </div>
