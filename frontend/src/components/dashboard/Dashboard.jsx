@@ -17,7 +17,7 @@ import { createConversation } from "@/redux/api/chat-state-api";
 
 
 function Dashboard({ userInfo, onLogout }) {
-  const [activeComponent, setActiveComponent] = useState("Assessment"); // Default to Assessment view
+  const [activeComponent, setActiveComponent] = useState("Chat"); // Default to Assessment view
   const [selectedConId, setSelectedConId] = useState(null);
   const dispatch = useDispatch();
 
@@ -140,7 +140,7 @@ function Dashboard({ userInfo, onLogout }) {
           />
         </div>
       </Sidebar>
-      {activeComponent === "Chat" ? <ChatComponent /> : activeComponent === "ChatHistory" ? <ChatHistory /> : <SelfAssessment />}
+      {activeComponent === "Chat" ? <ChatComponent /> : activeComponent === "ChatHistory" ? <ChatHistory /> : null}
     </div>
   );
 }
