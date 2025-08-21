@@ -17,7 +17,7 @@ function LoginController({
   // validate login with backend API
   async function validateLogin() {
     if (!username || !password) {
-      onLoginError("请填写所有字段");
+      onLoginError("Please complete all fields");
       return;
     }
 
@@ -33,11 +33,11 @@ function LoginController({
           role: response.data.role,
         });
       } else {
-        onLoginError(response.error || "登录失败");
+        onLoginError(response.error || "Login failed, please try again");
       }
     } catch (error) {
       console.error("Login error:", error);
-      onLoginError("登录失败，请重试");
+      onLoginError("Login failed, please try again");
     } finally {
       setIsLoading(false);
     }

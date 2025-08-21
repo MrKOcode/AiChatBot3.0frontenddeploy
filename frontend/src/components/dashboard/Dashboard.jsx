@@ -130,14 +130,6 @@ function Dashboard({ userInfo, onLogout }) {
           onClick={() => setActiveComponent("ChatHistory")}
         />
 
-        <SidebarItem
-          icon={<NotebookPen size={20} />}
-          text="Self Assessment"
-          active={activeComponent === "Assessment"}
-          alert
-          onClick={() => setActiveComponent("Assessment")}
-        />
-
         {/* Logout button at the bottom */}
         <div className={styles.logoutSection}>
           <SidebarItem
