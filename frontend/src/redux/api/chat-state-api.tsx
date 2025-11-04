@@ -1,3 +1,6 @@
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+
 import { AppDispatch } from "@src/redux/store/store";
 import {
   fetchConListReq,
@@ -186,7 +189,7 @@ export const createConversation = () => {
 
       console.log("createConversation - Sending request to /api/AIchat/conversations");
 
-      const response = await fetch(`http://localhost:8080/api/AIchat/conversations`, {
+      const response = await fetch(`${API_BASE}/api/AIchat/conversations`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -281,7 +284,7 @@ export const sendMessage = (conversationId: string, content: string) => {
           "/content",
       );
       const response = await fetch(
-        `http://localhost:8080/api/AIchat/conversations/${conversationId}/messages`,
+        `${API_BASE}/api/AIchat/conversations/${conversationId}/messages`,
         {
           method: "POST",
           headers: {
