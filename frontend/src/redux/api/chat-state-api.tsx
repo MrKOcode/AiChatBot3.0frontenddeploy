@@ -65,9 +65,9 @@ export const fetchConversationList = () => {
     console.log("fetchConversationList - Dispatched fetchConListReq");
     try {
       console.log(
-        "fetchConversationList - Sending request to /api/AIchat/conversations",
+        "fetchConversationList - Sending request to ${API_BASE}/api/AIchat/conversations",
       );
-      const response = await fetch(`/api/AIchat/conversations`, {
+      const response = await fetch(`${API_BASE}/api/AIchat/conversations`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export const fetchConversationContent = (conversationId: string) => {
           "/content/50/0",
       );
       const response = await fetch(
-        `/api/AIchat/conversations/${conversationId}/content/50/0`,
+        `${API_BASE}/api/AIchat/conversations/${conversationId}/content/50/0`,
         {
           method: "GET",
           headers: {
@@ -346,11 +346,11 @@ export const deleteConversation = (conversationId: string) => {
       console.log("deleteConversation - Request body:", requestBody);
 
       console.log(
-        "deleteConversation - Sending request to /api/AIchat/conversations/" +
+        "deleteConversation - Sending request to ${API_BASE}/api/AIchat/conversations/" +
           conversationId,
       );
       const response = await fetch(
-        `/api/AIchat/conversations/${conversationId}`,
+        `${API_BASE}/api/AIchat/conversations/${conversationId}`,
         {
           method: "DELETE",
           headers: {
