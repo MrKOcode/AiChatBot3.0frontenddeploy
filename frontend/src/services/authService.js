@@ -1,5 +1,6 @@
 // API base URL
-const API_BASE_URL = '${API_BASE_URL}/api/auth';
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/auth`;
+
 
 /**
  * 用户注册
