@@ -1,169 +1,120 @@
-// API base URL
-const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/auth`;
-console.log("VITE_API_BASE_URL =", import.meta.env.VITE_API_BASE_URL);
+import {
+  CognitoUserPool,
+  CognitoUser,
+  AuthenticationDetails,
+} from "amazon-cognito-identity-js";
+import jwtDecode from "jwt-decode";
 
+const REGION = import.meta.env.VITE_COGNITO_REGION;
+const USER_POOL_ID = import.meta.env.VITE_COGNITO_USER_POOL_ID;
+const CLIENT_ID = import.meta.env.VITE_COGNITO_CLIENT_ID;
 
-/**
- * 用户注册c
- * @param {string} username - 用户名
- * @param {string} password - 密码
- * @returns {Promise<Object>} - 注册结果
- */
-export const registerUser = async (username, password) => {
+const pool = new CognitoUserPool({
+  UserPoolId: USER_POOL_ID,
+  ClientId: CLIENT_ID,
+});
+
+// ---------- helpers ----------
+const saveSession = (session) => {
+  const idToken = session.getIdToken().getJwtToken();
+  const accessToken = session.getAccessToken().getJwtToken();
+  const refreshToken = session.getRefreshToken()?.getToken();
+
+  const decoded = jwtDecode(idToken);
+  const groups = decoded["cognito:groups"] || [];
+const role = groups.includes("admins") ? "admin" : "student";
+  localStorage.setItem("idToken", idToken);
+  localStorage.setItem("accessToken", accessToken);
+  if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+  // Use sub & email for your UI
+  localStorage.setItem("userId", decoded.sub || "");
+  localStorage.setItem("username", decoded.email || decoded["cognito:username"] || "");
+  
+  localStorage.setItem("userRole", role);
+};
+
+export const getIdToken = () => localStorage.getItem("idToken") || "";
+
+export const isTokenValid = () => {
+  const idToken = localStorage.getItem("idToken");
+  if (!idToken) return false;
   try {
-    const response = await fetch(`${API_BASE_URL}/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      return {
-        success: true,
-        data: {
-          userId: data.userId,
-          username: data.username,
-          role: data.role || 'user',
-        },
-      };
-    } else {
-      return {
-        success: false,
-        error: data.error || 'Registration failed',
-      };
-    }
-  } catch (error) {
-    console.error('Registration API error:', error);
-    return {
-      success: false,
-      error: 'Network error. Please try again.',
-    };
+    const { exp } = jwtDecode(idToken);
+    return exp * 1000 > Date.now();
+  } catch {
+    return false;
   }
 };
 
-/**
- * 用户登录
- * @param {string} username - 用户名
- * @param {string} password - 密码
- * @returns {Promise<Object>} - 登录结果
- */
-export const loginUser = async (username, password) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+// ---------- public API for your UI ----------
 
-    const data = await response.json();
-
-    if (response.ok) {
-      return {
+// Signup with email+password (Cognito will email a code)
+export const registerUser = (email, password) =>
+  new Promise((resolve, reject) => {
+    pool.signUp(email, password, [], null, (err, result) => {
+      if (err) return resolve({ success: false, error: err.message || String(err) });
+      resolve({
         success: true,
         data: {
-          userId: data.userId,
-          username: data.username,
-          role: data.role || 'user',
+          username: result.user.getUsername(),
         },
-      };
-    } else {
-      return {
-        success: false,
-        error: data.error || 'Login failed',
-      };
-    }
-  } catch (error) {
-    console.error('Login API error:', error);
-    return {
-      success: false,
-      error: 'Network error. Please try again.',
-    };
-  }
-};
-
-/**
- * 获取用户信息
- * @param {string} userId - 用户ID
- * @returns {Promise<Object>} - 用户信息
- */
-export const getUserInfo = async (userId) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/user/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      });
     });
+  });
 
-    const data = await response.json();
+// Confirm email with the code Cognito sent
+export const confirmUser = (email, code) =>
+  new Promise((resolve) => {
+    const user = new CognitoUser({ Username: email, Pool: pool });
+    user.confirmRegistration(code, true, (err, _res) => {
+      if (err) return resolve({ success: false, error: err.message || String(err) });
+      resolve({ success: true });
+    });
+  });
 
-    if (response.ok) {
-      return {
-        success: true,
-        data: {
-          userId: data.userId,
-          username: data.username,
-          role: data.role,
-        },
-      };
-    } else {
-      return {
-        success: false,
-        error: data.error || 'Failed to get user info',
-      };
-    }
-  } catch (error) {
-    console.error('Get user info API error:', error);
-    return {
-      success: false,
-      error: 'Network error. Please try again.',
-    };
-  }
+// Login (SRP) – no backend endpoint, gets tokens directly
+export const loginUser = (email, password) =>
+  new Promise((resolve) => {
+    const user = new CognitoUser({ Username: email, Pool: pool });
+    const authDetails = new AuthenticationDetails({ Username: email, Password: password });
+
+    user.authenticateUser(authDetails, {
+      onSuccess: (session) => {
+        saveSession(session);
+        resolve({
+          success: true,
+          data: {
+            userId: localStorage.getItem("userId"),
+            username: localStorage.getItem("username"),
+            role: localStorage.getItem("userRole"),
+          },
+        });
+      },
+      onFailure: (err) => resolve({ success: false, error: err.message || String(err) }),
+      newPasswordRequired: () => resolve({ success: false, error: "New password required." }),
+    });
+  });
+
+export const logoutUser = () => {
+  const current = pool.getCurrentUser();
+  if (current) current.signOut();
+  localStorage.removeItem("idToken");
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("userId");
+  localStorage.removeItem("username");
+  localStorage.removeItem("userRole");
 };
 
-/**
- * 检查用户是否已登录
- * @returns {Object} - 登录状态和用户信息
- */
 export const checkAuthStatus = () => {
-  const userId = localStorage.getItem('userId');
-  const username = localStorage.getItem('username');
-  const userRole = localStorage.getItem('userRole');
-
-  if (userId && username) {
-    return {
-      isAuthenticated: true,
-      user: {
-        userId: parseInt(userId),
-        username,
-        role: userRole,
-      },
-    };
-  }
-
+  if (!isTokenValid()) return { isAuthenticated: false, user: null };
   return {
-    isAuthenticated: false,
-    user: null,
+    isAuthenticated: true,
+    user: {
+      userId: localStorage.getItem("userId"),
+      username: localStorage.getItem("username"),
+      role: localStorage.getItem("userRole") || "user",
+    },
   };
 };
-
-/**
- * 用户登出
- */
-export const logoutUser = () => {
-  localStorage.removeItem('userId');
-  localStorage.removeItem('username');
-  localStorage.removeItem('userRole');
-}; 
+  
