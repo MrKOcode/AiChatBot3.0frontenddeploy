@@ -4,7 +4,7 @@ console.log("VITE_API_BASE_URL =", import.meta.env.VITE_API_BASE_URL);
 
 
 /**
- * 用户注册
+ * 用户注册c
  * @param {string} username - 用户名
  * @param {string} password - 密码
  * @returns {Promise<Object>} - 注册结果
