@@ -1,59 +1,46 @@
 import styles from "./LoginController.module.css";
-import React from "react";
+import React, { useState } from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { useState } from "react";
 import { loginUser } from "../../services/authService";
 
-function LoginController({
-  username,
-  password,
-  onLoginSuccess,
-  onLoginError,
-}) {
-  // States for button animation and loading
+function LoginController({ username, password, onLoginSuccess, onLoginError }) {
   const [animateButton, setAnimate] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // validate login with backend API
-  async function validateLogin() {
+  async function handleLogin() {
     if (!username || !password) {
-      onLoginError("Please complete all fields");
+      onLoginError("Please enter both email and password");
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
-      const response = await loginUser(username, password);
-      
-      if (response.success) {
+      const res = await loginUser(username, password);
+
+      if (res.success) {
         onLoginSuccess({
-          userId: response.data.userId,
-          username: response.data.username,
-          role: response.data.role,
+          userId: res.data.userId,
+          username: res.data.username,
+          role: res.data.role,
         });
       } else {
-        onLoginError(response.error || "Login failed, please try again");
+        onLoginError(res.error || "Login failed");
       }
-    } catch (error) {
-      console.error("Login error:", error);
-      onLoginError("Login failed, please try again");
+    } catch (err) {
+      console.error("Cognito login error:", err);
+      onLoginError("Unable to login, please try again.");
     } finally {
       setIsLoading(false);
     }
   }
 
-  // Button Click Handler
-  function handleClick() {
-    if (isLoading) return; // Prevent multiple clicks during loading
-    
+  const handleClick = () => {
+    if (isLoading) return;
     setAnimate(true);
-    // Repeating our animation after 300ms
     setTimeout(() => setAnimate(false), 300);
-
-    // animate then validate
-    validateLogin();
-  }
+    handleLogin();
+  };
 
   return (
     <button
@@ -61,11 +48,7 @@ function LoginController({
       onClick={handleClick}
       disabled={isLoading}
     >
-      {isLoading ? (
-        <div className={styles.spinner}></div>
-      ) : (
-        <FaArrowRightLong className={styles.rightArrow} />
-      )}
+      {isLoading ? <div className={styles.spinner}></div> : <FaArrowRightLong className={styles.rightArrow} />}
     </button>
   );
 }
