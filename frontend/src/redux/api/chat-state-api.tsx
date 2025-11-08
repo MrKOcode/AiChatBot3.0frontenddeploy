@@ -41,6 +41,13 @@ import {
 //   console.log("convertMessage - Output:", result);
 //   return result;
 // };
+
+// ✅ Add this helper right after imports
+const getAuthHeaders = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${localStorage.getItem("idToken") || ""}`,
+});
+
 const convertMessage = (message: BackendMessage): FrontendMessage => {
   const roleMap: { [key: string]: FrontendMessage["role"] } = {
     user: "send",
@@ -69,9 +76,7 @@ export const fetchConversationList = () => {
       );
       const response = await fetch(`${API_BASE}/api/AIchat/conversations`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
       });
       console.log("fetchConversationList - Received response:", response);
 
@@ -127,9 +132,7 @@ export const fetchConversationContent = (conversationId: string) => {
         `${API_BASE}/api/AIchat/conversations/${conversationId}/content/50/0`,
         {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getAuthHeaders(),
         },
       );
       console.log("fetchConversationContent - Received response:", response);
@@ -191,9 +194,7 @@ export const createConversation = () => {
 
       const response = await fetch(`${API_BASE}/api/AIchat/conversations`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(requestBody),
       });
       console.log("createConversation - Received response:", response);
@@ -287,9 +288,7 @@ export const sendMessage = (conversationId: string, content: string) => {
         `${API_BASE}/api/AIchat/conversations/${conversationId}/messages`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getAuthHeaders(),
           body: JSON.stringify(requestBody),
         },
       );
@@ -353,9 +352,8 @@ export const deleteConversation = (conversationId: string) => {
         `${API_BASE}/api/AIchat/conversations/${conversationId}`,
         {
           method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: 
+            getAuthHeaders(),
           body: JSON.stringify(requestBody),
         },
       );
