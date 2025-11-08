@@ -45,9 +45,16 @@ function RegisterController({
         onRegisterError(response.error || "Registration failed" );
       }
     } catch (error) {
-      console.error("Registration error:", error);
-      onRegisterError("An error occurred during registration,try again.");
-    }
+  // Log entire error object and readable fields
+  console.error("Registration error:", error);
+  if (error && error.error) {
+    console.error("Cognito error message:", error.error);
+  }
+  if (error && error.message) {
+    console.error("Cognito error message:", error.message);
+  }
+  onRegisterError(error.error || error.message || "An error occurred during registration.");
+}
   };
 
   return (

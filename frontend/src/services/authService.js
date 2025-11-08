@@ -3,7 +3,7 @@ import {
   CognitoUser,
   AuthenticationDetails,
 } from "amazon-cognito-identity-js";
-import jwtDecode from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 const REGION = import.meta.env.VITE_COGNITO_REGION;
 const USER_POOL_ID = import.meta.env.VITE_COGNITO_USER_POOL_ID;
@@ -64,7 +64,7 @@ export const loginUser = async (username, password) =>
 
 // ---------- check ----------
 export const checkAuthStatus = () => {
-  const idToken = localStorage.getItem("idToken");
+  const idToken = Storage.getItem("idToken");
   if (!idToken) return { isAuthenticated: false, user: null };
   const decoded = jwtDecode(idToken);
   return {

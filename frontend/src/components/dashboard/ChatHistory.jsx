@@ -31,7 +31,7 @@ const ChatHistory = () => {
 
   const fetchAdminChatSummary = async (adminUserId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/chat-history/user/${adminUserId}?page=1&pageSize=1`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/chat-history/user/${adminUserId}?page=1&pageSize=1`);
       const data = await response.json();
       
       if (data.total > 0) {
@@ -63,7 +63,7 @@ const ChatHistory = () => {
   const fetchAllUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:8080/api/chat-history/admin/users");
+      const response = await fetch("${import.meta.env.VITE_API_BASE_URL}/api/chat-history/admin/users");
       const data = await response.json();
       
       if (data.users && data.users.length > 0) {
@@ -92,7 +92,7 @@ const ChatHistory = () => {
         params.append("keyword", searchKeyword);
       }
       
-      const response = await fetch(`http://localhost:8080/api/chat-history/user/${userId}?${params}`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/chat-history/user/${userId}?${params}`);
       const data = await response.json();
       
       if (data.messages && Array.isArray(data.messages)) {
