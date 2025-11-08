@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ChatHistory.module.css";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const getAuthHeaders = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${localStorage.getItem("idToken") || ""}`,
+});
+
+
 const ChatHistory = () => {
   const [userRole, setUserRole] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
@@ -31,7 +38,10 @@ const ChatHistory = () => {
 
   const fetchAdminChatSummary = async (adminUserId) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/chat-history/user/${adminUserId}?page=1&pageSize=1`);
+      const response = await fetch(
+  `${API_BASE}/api/AIchat/history/?userId=${adminUserId}`,
+  { method: "GET", headers: getAuthHeaders() }
+);
       const data = await response.json();
       
       if (data.total > 0) {
@@ -63,7 +73,11 @@ const ChatHistory = () => {
   const fetchAllUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch("${import.meta.env.VITE_API_BASE_URL}/api/chat-history/admin/users");
+      const response = await fetch(
+  `${API_BASE}/api/AIchat/admin/users`,
+  { method: "GET", headers: getAuthHeaders() }
+);
+
       const data = await response.json();
       
       if (data.users && data.users.length > 0) {
@@ -92,7 +106,11 @@ const ChatHistory = () => {
         params.append("keyword", searchKeyword);
       }
       
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/chat-history/user/${userId}?${params}`);
+      const response = await fetch(
+  `${API_BASE}/api/AIchat/history/?userId=${userId}&${params.toString()}`,
+  { method: "GET", headers: getAuthHeaders() }
+);
+
       const data = await response.json();
       
       if (data.messages && Array.isArray(data.messages)) {
