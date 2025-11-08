@@ -122,19 +122,22 @@ export const fetchConversationContent = (conversationId: string) => {
     );
     dispatch(fetchConContentReq());
     console.log("fetchConversationContent - Dispatched fetchConContentReq");
+
     try {
+      const userId = localStorage.getItem("userId");
       console.log(
-        "fetchConversationContent - Sending request to /api/AIchat/conversations/" +
-          conversationId +
-          "/content/50/0",
+        `fetchConversationContent - Sending request to /api/AIchat/conversations/${conversationId}/messages?userId=${userId}`,
       );
+
+      // ✅ Updated endpoint (matches your future /messages route)
       const response = await fetch(
-        `${API_BASE}/api/AIchat/conversations/${conversationId}/content/50/0`,
+        `${API_BASE}/api/AIchat/conversations/${conversationId}/messages?userId=${userId}`,
         {
           method: "GET",
           headers: getAuthHeaders(),
         },
       );
+
       console.log("fetchConversationContent - Received response:", response);
 
       if (!response.ok) {
@@ -142,18 +145,20 @@ export const fetchConversationContent = (conversationId: string) => {
         throw new Error("Network response was not ok");
       }
 
+      // ✅ Keep your existing backend type
       const data: ConversationContentResponse = await response.json();
       console.log("fetchConversationContent - Parsed JSON data:", data);
 
-      // Convert backend messages to frontend format
-      const messages = data.content.content.map(convertMessage);
+      // ✅ Add explicit typing for array element (fixes implicit any)
+      const messages = data.content.content.map((message: any) =>
+        convertMessage(message),
+      );
       console.log("fetchConversationContent - Converted messages:", messages);
 
-      // Get conversation from response
       const conversation = {
         conId: conversationId,
-        conTitle: "", // Title is not provided in content response, might need to be set elsewhere
-        messages: messages,
+        conTitle: "", // title not provided in response
+        messages,
       };
       console.log(
         "fetchConversationContent - Constructed conversation:",
@@ -178,6 +183,7 @@ export const fetchConversationContent = (conversationId: string) => {
   };
 };
 
+
 // Create a new conversation
 export const createConversation = () => {
   return async (dispatch: AppDispatch) => {
@@ -186,7 +192,7 @@ export const createConversation = () => {
     console.log("createConversation - Dispatched createConReq");
     try {
       const requestBody = {
-        userId: "1",
+        userId: localStorage.getItem("userId"),
       };
       console.log("createConversation - Request body:", requestBody);
 
@@ -339,7 +345,7 @@ export const deleteConversation = (conversationId: string) => {
     console.log("deleteConversation - Dispatched deleteConReq");
     try {
       const requestBody = {
-        userId: "1",
+        userId: localStorage.getItem("userId"),
         conversationId,
       };
       console.log("deleteConversation - Request body:", requestBody);
