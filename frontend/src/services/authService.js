@@ -64,7 +64,7 @@ export const loginUser = async (username, password) =>
 
 // ---------- check ----------
 export const checkAuthStatus = () => {
-  const idToken = Storage.getItem("idToken");
+  const idToken = localStorage.getItem("idToken");
   if (!idToken) return { isAuthenticated: false, user: null };
   const decoded = jwtDecode(idToken);
   return {

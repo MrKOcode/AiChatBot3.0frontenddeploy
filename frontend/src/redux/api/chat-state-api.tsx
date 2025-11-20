@@ -74,7 +74,8 @@ export const fetchConversationList = () => {
       console.log(
         "fetchConversationList - Sending request to ${API_BASE}/api/AIchat/conversations",
       );
-      const response = await fetch(`${API_BASE}/api/AIchat/conversations`, {
+      const userId = localStorage.getItem("userId");
+      const response = await fetch(`${API_BASE}/api/AIchat/conversations?userId=${userId}`, {
         method: "GET",
         headers: getAuthHeaders(),
       });
@@ -274,7 +275,7 @@ export const sendMessage = (conversationId: string, content: string) => {
   content,
   role: "user", //  still a string here because we use it in the backend
   createdAt: new Date().toISOString(),
-  conversationId: Number(conversationId), //ensure conversation Id is a number
+  conversationId: conversationId, //ensure conversation Id is a number
 };
       console.log("sendMessage - Created backend message:", message);
 
